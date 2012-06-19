@@ -1,1 +1,8 @@
-target
+/.git
+/target
+/.settings
+/hsql:..script
+/hsql:..log
+/hsql:..properties
+.project
+.classpath

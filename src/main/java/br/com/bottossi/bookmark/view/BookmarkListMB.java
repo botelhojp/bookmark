@@ -2,17 +2,23 @@ package br.com.bottossi.bookmark.view;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import br.gov.frameworkdemoiselle.annotation.NextView;
-import br.gov.frameworkdemoiselle.annotation.PreviousView;
-import br.gov.frameworkdemoiselle.stereotype.ViewController;
-import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
-import br.gov.frameworkdemoiselle.transaction.Transactional;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 import br.com.bottossi.bookmark.business.BookmarkBC;
 import br.com.bottossi.bookmark.domain.Bookmark;
+import br.gov.frameworkdemoiselle.annotation.NextView;
+import br.gov.frameworkdemoiselle.annotation.PreviousView;
+import br.gov.frameworkdemoiselle.pagination.Pagination;
+import br.gov.frameworkdemoiselle.pagination.PaginationContext;
+import br.gov.frameworkdemoiselle.stereotype.ViewController;
+import br.gov.frameworkdemoiselle.template.AbstractListPageBean;
+import br.gov.frameworkdemoiselle.transaction.Transactional;
 
 @ViewController
 @NextView("/bookmark_edit.xhtml")
@@ -23,6 +29,42 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 
 	@Inject
 	private BookmarkBC bc;
+	
+	@Inject
+	private PaginationContext pgcontext;
+	
+	private LazyDataModel<Bookmark> dataModel;
+	
+	private Bookmark selectedBean;
+	
+	@PostConstruct
+	public void init() {		
+
+		dataModel = new LazyDataModel<Bookmark>() {
+			
+			Pagination pagination = pgcontext.getPagination(Bookmark.class, true);
+			
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public List<Bookmark> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
+				pagination.setFirstResult(first);
+				pagination.setPageSize(pageSize);
+				return bc.findByPagination(sortField, sortOrder, filters);		
+			}
+			
+			@Override  
+		    public Object getRowKey(Bookmark item) {  
+		        return item;
+		    } 
+			
+			@Override
+			public int getRowCount() {
+				return pagination.getTotalResults();
+			}
+		};
+	}
+
 
 	@Override
 	protected List<Bookmark> handleResultList() {
@@ -42,6 +84,26 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 			}
 		}
 		return getPreviousView();
+	}
+
+	
+	public LazyDataModel<Bookmark> getDataModel() {
+		return dataModel;
+	}
+	
+	public void setDataModel(LazyDataModel<Bookmark> dataModel) {
+		this.dataModel = dataModel;
+	}
+
+
+	
+	public Bookmark getSelectedBean() {
+		return selectedBean;
+	}
+
+	
+	public void setSelectedBean(Bookmark selectedBean) {
+		this.selectedBean = selectedBean;
 	}
 
 }

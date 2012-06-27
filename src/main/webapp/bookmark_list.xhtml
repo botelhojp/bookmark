@@ -22,7 +22,14 @@
 				</p:toolbarGroup>
 			</p:toolbar>
 
-			<p:dataTable id="list" var="bean" value="#{bookmarkListMB.resultList}">
+		<p:dataTable var="bean" 
+				value="#{bookmarkListMB.dataModel}" paginator="true" rows="10"  
+                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+                rowsPerPageTemplate="3,5,10,15"
+                selectionMode="single" 
+                selection="#{bookmarkListMB.selectedBean}"
+                lazy="true">  
+                
 				<f:facet name="header">#{messages['bookmark.list.table.title']}</f:facet>
 				<p:column style="width:5%;">
 					<h:selectBooleanCheckbox value="#{bookmarkListMB.selection[bean.id]}" />
@@ -31,14 +38,14 @@
 					<f:facet name="header">#{messages['bookmark.label.id']}</f:facet>
 					<h:outputText value="#{bean.id}" />
 				</p:column>
-				<p:column sortBy="#{bean.description}">
+				<p:column sortBy="#{bean.description}" filterBy="#{bean.description}">
 					<f:facet name="header">#{messages['bookmark.label.description']}</f:facet>
 					<h:commandLink action="#{bookmarkListMB.getNextView}" actionListener="#{bookmarkListMB.clear}">
 						<h:outputText value="#{bean.description}" />
 						<f:param name="id" value="#{bean.id}" />
 					</h:commandLink>
 				</p:column>
-				<p:column sortBy="#{bean.link}">
+				<p:column sortBy="#{bean.link}" filterBy="#{bean.link}">
 					<f:facet name="header">#{messages['bookmark.label.link']}</f:facet>
 					<h:commandLink action="#{bookmarkListMB.getNextView}" actionListener="#{bookmarkListMB.clear}">
 						<h:outputText value="#{bean.link}" />

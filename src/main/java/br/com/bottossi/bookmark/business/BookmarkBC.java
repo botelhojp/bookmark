@@ -1,5 +1,10 @@
 package br.com.bottossi.bookmark.business;
 
+import java.util.List;
+import java.util.Map;
+
+import org.primefaces.model.SortOrder;
+
 import br.gov.frameworkdemoiselle.annotation.Startup;
 import br.gov.frameworkdemoiselle.stereotype.BusinessController;
 import br.gov.frameworkdemoiselle.template.DelegateCrud;
@@ -28,6 +33,11 @@ public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 			insert(new Bookmark("Maven", "http://repository.frameworkdemoiselle.gov.br"));
 			insert(new Bookmark("Downloads", "http://download.frameworkdemoiselle.gov.br"));
 		}
+	}
+
+	public List<Bookmark> findByPagination(String sortField, SortOrder sortOrder,
+			Map<String, String> filters) {
+		return getDelegate().findByPagination(sortField, sortOrder, filters);
 	}
 	
 }

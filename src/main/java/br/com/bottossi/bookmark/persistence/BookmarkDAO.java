@@ -30,7 +30,7 @@ public class BookmarkDAO extends JPACrud<Bookmark, Long> {
 	@SuppressWarnings("unused")
 	private Logger logger;
 
-	public List<Bookmark> findByPagination(String sortField, SortOrder sortOrder, Map<String, String> filters){
+	public List<Bookmark> findByJPQL(String sortField, SortOrder sortOrder, Map<String, String> filters){
 		StringBuffer select = new StringBuffer("SELECT this FROM Bookmark this ");
 		
 		if (!filters.isEmpty()) {
@@ -57,10 +57,10 @@ public class BookmarkDAO extends JPACrud<Bookmark, Long> {
 					break;
 			}
 		}		
-		return super.findJPQL(select.toString());
+		return super.findByJPQL(select.toString());
 	}
 
-	public List<Bookmark> findByPagination2(String sortField, SortOrder sortOrder, Map<String, String> filters){
+	public List<Bookmark> findByCriteriaQuery(String sortField, SortOrder sortOrder, Map<String, String> filters){
 			// criacao do critério de busca
 			CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
 			CriteriaQuery<Bookmark> cQuery = builder.createQuery(Bookmark.class);
@@ -89,51 +89,51 @@ public class BookmarkDAO extends JPACrud<Bookmark, Long> {
 				}
 			}
 			//retorna a lista paginada
-			return _findCriteria(select);
+			return super.findByCriteriaQuery(select);
 		}
 	
-	/**
-	 * Perform a paged query by JPQL
-	 * @param jpql
-	 * @return
-	 */
-	private List<Bookmark> _findJPQL(String jpql) {
-		TypedQuery<Bookmark> listQuery = getEntityManager().createQuery(jpql, getBeanClass());
-		Pagination pagination = getPagination();
-		if (pagination != null) {
-			CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
-			CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-			countQuery.select(builder.count(countQuery.from(getBeanClass())));
-			getEntityManager().createQuery(jpql, getBeanClass());
-			pagination.setTotalResults((int) (getEntityManager().createQuery(countQuery).getSingleResult() + 0));
-			listQuery.setFirstResult(pagination.getFirstResult());
-			listQuery.setMaxResults(pagination.getPageSize());
-		}
-		return listQuery.getResultList();
-	}
+//	/**
+//	 * Perform a paged query by JPQL
+//	 * @param jpql
+//	 * @return
+//	 */
+//	private List<Bookmark> _findJPQL(String jpql) {
+//		TypedQuery<Bookmark> listQuery = getEntityManager().createQuery(jpql, getBeanClass());
+//		Pagination pagination = getPagination();
+//		if (pagination != null) {
+//			CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+//			CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+//			countQuery.select(builder.count(countQuery.from(getBeanClass())));
+//			getEntityManager().createQuery(jpql, getBeanClass());
+//			pagination.setTotalResults((int) (getEntityManager().createQuery(countQuery).getSingleResult() + 0));
+//			listQuery.setFirstResult(pagination.getFirstResult());
+//			listQuery.setMaxResults(pagination.getPageSize());
+//		}
+//		return listQuery.getResultList();
+//	}
 	
 	/**
 	 * Perform a paged query by CriteriaQuery
 	 * @param jpql
 	 * @return
 	 */
-	private List<Bookmark> _findCriteria(CriteriaQuery<Bookmark> select) {
-		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
-		
-		CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-		countQuery.select(builder.count(countQuery.from(getBeanClass())));
-		getEntityManager().createQuery(countQuery);	
-
-		TypedQuery<Bookmark> listQuery = getEntityManager().createQuery(select);
-		
-		Pagination pagination = getPagination();
-		if (pagination != null) {
-			pagination.setTotalResults((int) (getEntityManager().createQuery(countQuery).getSingleResult() + 0));
-			listQuery.setFirstResult(pagination.getFirstResult());
-			listQuery.setMaxResults(pagination.getPageSize());
-		}		
-		return listQuery.getResultList();
-	}
+//	private List<Bookmark> _findCriteria(CriteriaQuery<Bookmark> select) {
+//		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+//		
+//		CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+//		countQuery.select(builder.count(countQuery.from(getBeanClass())));
+//		getEntityManager().createQuery(countQuery);	
+//
+//		TypedQuery<Bookmark> listQuery = getEntityManager().createQuery(select);
+//		
+//		Pagination pagination = getPagination();
+//		if (pagination != null) {
+//			pagination.setTotalResults((int) (getEntityManager().createQuery(countQuery).getSingleResult() + 0));
+//			listQuery.setFirstResult(pagination.getFirstResult());
+//			listQuery.setMaxResults(pagination.getPageSize());
+//		}		
+//		return listQuery.getResultList();
+//	}
 	
 
 

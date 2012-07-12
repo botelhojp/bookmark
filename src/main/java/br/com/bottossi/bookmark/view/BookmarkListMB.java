@@ -29,40 +29,29 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 
 	@Inject
 	private BookmarkBC bc;
-	
+
 	@Inject
 	private PaginationContext pgcontext;
-	
+
 	private LazyDataModel<Bookmark> dataModel;
-	
+
 	private Bookmark selectedBean;
-	
+
+
 	@PostConstruct
 	public void init() {		
 
-		dataModel = new LazyDataModel<Bookmark>() {
-			
-			Pagination pagination = pgcontext.getPagination(Bookmark.class, true);
-			
+		dataModel = new CrudDataModel<Bookmark>() {
+
 			private static final long serialVersionUID = 1L;
-			
+
 			@Override
-			public List<Bookmark> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-				pagination.setFirstResult(first);
-				pagination.setPageSize(pageSize);
-				return bc.findByPagination(sortField, sortOrder, filters);		
-			}
-			
-			@Override  
-		    public Object getRowKey(Bookmark item) {  
-		        return item;
-		    } 
-			
-			@Override
-			public int getRowCount() {
-				return pagination.getTotalResults();
-			}
-		};
+			public List<Bookmark> load(String sortField, SortOrder sortOrder, Map<String, String> filters) {
+					//return bc.findByCriteriaQuery(sortField, sortOrder, filters);	
+					return bc.findByJPQL(sortField, sortOrder, filters);
+				}
+			};
+		
 	}
 
 
@@ -86,22 +75,22 @@ public class BookmarkListMB extends AbstractListPageBean<Bookmark, Long> {
 		return getPreviousView();
 	}
 
-	
+
 	public LazyDataModel<Bookmark> getDataModel() {
 		return dataModel;
 	}
-	
+
 	public void setDataModel(LazyDataModel<Bookmark> dataModel) {
 		this.dataModel = dataModel;
 	}
 
 
-	
+
 	public Bookmark getSelectedBean() {
 		return selectedBean;
 	}
 
-	
+
 	public void setSelectedBean(Bookmark selectedBean) {
 		this.selectedBean = selectedBean;
 	}

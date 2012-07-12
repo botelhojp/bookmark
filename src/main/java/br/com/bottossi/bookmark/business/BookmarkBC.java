@@ -33,12 +33,26 @@ public class BookmarkBC extends DelegateCrud<Bookmark, Long, BookmarkDAO> {
 			insert(new Bookmark("Maven", "http://repository.frameworkdemoiselle.gov.br"));
 			insert(new Bookmark("Downloads", "http://download.frameworkdemoiselle.gov.br"));
 			insert(new Bookmark("Meu", "http://download.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa1", "http://casa1.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa2", "http://casa2.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa3", "http://casa3.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa4", "http://casa4.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa5", "http://casa5.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa6", "http://casa6.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa7", "http://casa7.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa8", "http://casa8.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa9", "http://casa9.frameworkdemoiselle.gov.br"));
+			insert(new Bookmark("Casa10", "http://casa10.frameworkdemoiselle.gov.br"));
 		}
 	}
 
-	public List<Bookmark> findByPagination(String sortField, SortOrder sortOrder,
-			Map<String, String> filters) {
-		return getDelegate().findByPagination(sortField, sortOrder, filters);
+	public List<Bookmark> findByJPQL(String sortField, SortOrder sortOrder,	Map<String, String> filters) {
+		return getDelegate().findByJPQL(sortField, sortOrder, filters);
 	}
+	
+	public List<Bookmark> findByCriteriaQuery(String sortField, SortOrder sortOrder,	Map<String, String> filters) {
+		return getDelegate().findByCriteriaQuery(sortField, sortOrder, filters);
+	}
+
 	
 }
